@@ -241,4 +241,29 @@ describe('Invoice Events Link API & Receipt Idempotency', () => {
     assert.ok(foundByPay);
     assert.equal(foundByPay.paymentId, 'pay_999');
   });
+
+  it('accepts multiple receipt items without splitting the receipt total', async () => {
+    const res = await request(app)
+      .post('/api/invoices')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        number: 'INV-TEST-MULTI-001',
+        eventName: 'Multi-item Receipt',
+        contactName: 'Ramesh Kumar',
+        phone: '9123456780',
+        address: 'Studio',
+        dueDate: new Date(Date.now() + 86400000).toISOString(),
+        amountReceived: 500,
+        deliverables: [
+          { name: 'Photography', cost: 500 },
+          { name: 'Edited album', cost: 0 },
+          { name: 'Digital gallery', cost: 0 },
+        ],
+      });
+
+    assert.equal(res.status, 201);
+    assert.equal(res.body.success, true);
+    assert.deepEqual(res.body.invoice.deliverables.map((item) => item.cost), [500, 0, 0]);
+    assert.equal(res.body.invoice.total, 500);
+  });
 });

@@ -195,7 +195,10 @@ function nestedCreate(kind, fieldsList, req, res) {
 
             const receiptItems = (event.receiptItems && event.receiptItems.length > 0) ? event.receiptItems : null;
             const deliverables = receiptItems
-              ? receiptItems.map((name, index) => ({ name, cost: index === 0 ? (event.totalAmount || item.amount || 0) : 0 }))
+              ? receiptItems.map((name, index) => ({
+                  name,
+                  cost: index === 0 ? (event.totalAmount || item.amount || 0) : 0,
+                }))
               : [{ name: `${event.title} (${event.eventType})`, cost: event.totalAmount || item.amount || 1 }];
 
             generatedInvoice = await invoiceRepo.createInvoice({
@@ -365,7 +368,10 @@ async function autoGenerateInvoice(req, res) {
 
     const receiptItems = (event.receiptItems && event.receiptItems.length > 0) ? event.receiptItems : null;
     const deliverables = receiptItems
-      ? receiptItems.map((name, index) => ({ name, cost: index === 0 ? (event.totalAmount || 0) : 0 }))
+      ? receiptItems.map((name, index) => ({
+          name,
+          cost: index === 0 ? (event.totalAmount || 0) : 0,
+        }))
       : [{ name: `${event.title} (${event.eventType})`, cost: event.totalAmount || 0 }];
 
     const created = await invoiceRepo.createInvoice({

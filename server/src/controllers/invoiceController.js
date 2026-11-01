@@ -149,10 +149,10 @@ async function createInvoice(req, res) {
         message: 'Add at least one deliverable.',
       });
     }
-    if (fields.deliverables.some((item) => !item.name || item.cost <= 0)) {
+    if (fields.deliverables.some((item) => !item.name || item.cost < 0)) {
       return res.status(400).json({
         success: false,
-        message: 'Each deliverable needs a name and a cost greater than 0.',
+        message: 'Each item needs a name and a cost of 0 or greater.',
       });
     }
     if (fields.amountReceived > invoiceTotals(fields.deliverables).total) {

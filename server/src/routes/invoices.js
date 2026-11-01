@@ -51,8 +51,8 @@ const createRules = [
     .isLength({ min: 1, max: 160 })
     .withMessage('Each deliverable needs a name up to 160 characters'),
   body('deliverables.*.cost')
-    .isFloat({ gt: 0 })
-    .withMessage('Each deliverable needs a cost greater than 0'),
+    .isFloat({ min: 0 })
+    .withMessage('Each deliverable cost must be 0 or greater'),
 ];
 
 const updateRules = [
@@ -74,7 +74,7 @@ const updateRules = [
     .withMessage('Amount received cannot be negative'),
   body('deliverables').optional().isArray({ min: 1 }),
   body('deliverables.*.name').optional().trim().isLength({ min: 1, max: 160 }),
-  body('deliverables.*.cost').optional().isFloat({ gt: 0 }),
+  body('deliverables.*.cost').optional().isFloat({ min: 0 }),
 ];
 
 router.get('/', listInvoices);
